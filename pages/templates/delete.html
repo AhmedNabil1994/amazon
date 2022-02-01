@@ -1,0 +1,26 @@
+{% extends 'parentPage.html' %}
+{% block 'content' %}  
+<form method="post">
+    {%csrf_token%}
+     <div class="form-group">
+    <label >Delete user</label>
+    <input type="id" class="form-control"  placeholder="Enter user ID" name="id">
+  </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+
+    <form>
+         <table width="100%" border="1">
+       {%for user in  users%}
+             <tr>
+                <td>{{user.id}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.password}}</td>
+             </tr>
+
+
+
+    {%endfor%}
+       </table>   
+{% endblock %}
+    

@@ -1,0 +1,14 @@
+{% extends 'parentPage.html' %}
+{% block 'content' %}  
+<table width="100%" border="1">
+   {%for user in  users%}
+   <tr>
+      <td>{{user.userId}}</td>
+      <td>{{user.username}}</td>
+      <td>{{user.userEmail}}</td>
+      <td>{{user.userPassword}}</td>
+   </tr>
+{%endfor%} 
+</table>
+{% endblock %}
+    

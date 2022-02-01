@@ -1,0 +1,23 @@
+{% extends 'parentPage.html' %}
+{% block 'content' %}  
+<form method="post">
+    {%csrf_token%}
+     <div class="form-group">
+    <label >username</label>
+    <input type="username" class="form-control"  placeholder="Enter username" name="username">
+  </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+ <table width="100%" border="1">
+    {%for user in  users%}
+             <tr>
+                <td>{{user.userId}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.userEmail}}</td>
+                <td>{{user.userPassword}}</td>
+             </tr>
+    {%endfor%}         
+</table>
+{% endblock %}
+    
