@@ -18,6 +18,8 @@ urlpatterns = [
     path('selectwhere/',selectWhere,name="selectwhere"),
     path('delete/',delete,name="delete"),
     path('update/',update,name="update"),
+    path('mylogout/',mylogout,name="mylogout"),
+
 
 
 

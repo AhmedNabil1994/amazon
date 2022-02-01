@@ -10,7 +10,12 @@ def parentPage(request):
     return render(request, 'parentPage.html')
 
 def home(request):
-    return render(request,'home.html')
+    try:
+        if request.session["username"] is not None:
+            return render(request,'home.html')
+    except:
+        return redirect(login)
+
 
 
 def contact(request):
@@ -29,38 +34,39 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         myUser =Myusers.objects.all().filter(userName=username,userPassword=password)
-        # authuser=authenticate(username=username,usernassword=password)
-        for user in myUser:
-            if user.userName==username and user.userPassword==password:
-                # use context 
-                # user=user.userName
-                # return render(request, 'home.html',{'name':user})
+        authuser=authenticate(username=username,password=password)
+        # for user in myUser:
+        #     if user.userName==username and user.userPassword==password:
+        #         # use context 
+        #         # user=user.userName
+        #         # return render(request, 'home.html',{'name':user})
 
-                # use session
-                request.session['username']= username
-                # authlogin(request,authuser)
-                return redirect("home")
-            else:
-                return render(request, "login.html")
+        #         # use session
+        #         request.session['username']= username
+        #         # authlogin(request,authuser)
+        #         return redirect("home")
+        #     else:
+        #         return render(request, "login.html")
         
-        # if (len(myUser)>0)  and authuser is not None  :
-        #     # use context 
-        #     # user=user.userName
-        #     # return render(request, 'home.html',{'name':user})
-
-        #     # use session
-        #     request.session['username']= username
-        #     authlogin(request,authuser)
-        #     return redirect("home")
-        # else:
-        #     return render(request, "login.html")
+        if (len(myUser)>0)  :
+            # use context 
+            # user=user.userName
+            # return render(request, 'home.html',{'name':user})
+            if (authuser is not None):
+                authlogin(request,authuser)
+            # use session
+            request.session['username']= username
+            return redirect("home")
+        else:
+            context={}
+            context["msg"]="invalid username or password"
+            return render(request, "login.html",context)
 
 
 def register(request):
     if (request.method == 'GET'):
         return render(request, 'register.html')
     else:
-        #  Myusers.objects.create(username = request.POST['username'], email = request.POST['email'],password =request.POST['password'])
 
          username = request.POST['username']
          email = request.POST['email']
@@ -123,4 +129,5 @@ def update(request):
     return render(request, 'update.html')
 
 def mylogout(request):
-    pass
+    request.session.clear()
+    return redirect(login)
