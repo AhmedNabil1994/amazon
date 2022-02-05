@@ -1,20 +1,24 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Myusers
+from .models import *
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login as authlogin,logout
+from .forms import *
+from django.views import View
+from django.views.generic import ListView 
 
 
 def parentPage(request):
     return render(request, 'parentPage.html')
 
 def home(request):
-    try:
+    # try:
         if request.session["username"] is not None:
             return render(request,'home.html')
-    except:
-        return redirect(login)
+    # except:
+        else:
+            return redirect(login)
 
 
 
@@ -48,7 +52,7 @@ def login(request):
         #     else:
         #         return render(request, "login.html")
         
-        if (len(myUser)>0)  :
+        if (len(myUser)>0):
             # use context 
             # user=user.userName
             # return render(request, 'home.html',{'name':user})
@@ -62,12 +66,12 @@ def login(request):
             context["msg"]="invalid username or password"
             return render(request, "login.html",context)
 
-
-def register(request):
-    if (request.method == 'GET'):
+# class based view
+class Register(View):
+    def get(self,request):
         return render(request, 'register.html')
-    else:
-
+    
+    def post(self,request):
          username = request.POST['username']
          email = request.POST['email']
          password =request.POST['password']
@@ -78,17 +82,35 @@ def register(request):
          else:
           User.objects.create_user(username=username, password=password, is_staff=False)
          return redirect (login)
-        #  return render(request, 'register.html')
 
-def insert(request):
-    if (request.method == 'GET'):
-        return render(request, 'insert.html')
-    else:
-        username = request.POST['username']
-        email = request.POST['email']
-        password =request.POST['password']
-        Myusers.objects.create(userName=username, userEmail=email, userPassword=password)
-    return render(request, 'insert.html')
+# old definition fn view
+
+# def register(request):
+#     if (request.method == 'GET'):
+#         return render(request, 'register.html')
+#     else:
+
+#          username = request.POST['username']
+#          email = request.POST['email']
+#          password =request.POST['password']
+#          Myusers.objects.create(userName=username, userEmail=email, userPassword=password)
+#          if request.POST.get('check',True):
+#             #  admin user 
+#           User.objects.create_user(username=username,password=password,is_staff=True)
+#          else:
+#           User.objects.create_user(username=username, password=password, is_staff=False)
+#          return redirect (login)
+
+    # lab 3 insert
+# def insert(request):
+#     if (request.method == 'GET'):
+#         return render(request, 'insert.html')
+#     else:
+#         username = request.POST['username']
+#         email = request.POST['email']
+#         password =request.POST['password']
+#         Myusers.objects.create(userName=username, userEmail=email, userPassword=password)
+#     return render(request, 'insert.html')
 
 def delete(request):
     if (request.method == 'GET'):
@@ -131,3 +153,48 @@ def update(request):
 def mylogout(request):
     request.session.clear()
     return redirect(login)
+
+# lab 4 insert using forms
+def insert(request):
+    context={}
+    form=InsertUsers()
+    if (request.method == 'GET'):
+        context['form']=form 
+        return render(request, 'insert.html',context)
+    else:
+        username = request.POST['userName']
+        email = request.POST['userEmail']
+        password =request.POST['userPassword']
+        Myusers.objects.create(userName=username, userEmail=email, userPassword=password)
+    return render(request, 'insert.html',context)
+
+    # lab 4 insert using forms.modelform
+def insertUsingModel(request):
+    context={}
+    form=InsertUsersModel()
+    if (request.method == 'GET'):
+        context['form']=form 
+        return render(request, 'insertUsingModel.html',context)
+    else:
+        context['form']=form
+        formAfterInsert=InsertUsersModel(request.POST)
+        formAfterInsert.save()
+        return render(request, 'insertUsingModel.html',context)
+
+class Myusers_list(ListView):
+    model=Myusers
+
+
+class Insert_trainee(View):
+    context={}
+    form=InsertTrainee()
+    context['form']=form 
+    def get(self,request):
+        return render(request,"insert_trainee.html",self.context)
+    def post(self,request):
+        name=request.POST["name"]
+        track_id=request.POST["track_id"]
+        trackObject=Track.objects.get(id=track_id)
+        Trainee.objects.create(name=name,track=trackObject)
+        return render(request,"insert_trainee.html",self.context)
+

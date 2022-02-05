@@ -12,4 +12,4 @@ class Track(models.Model):
 
 class Trainee(models.Model):
     name = models.CharField(max_length=40)
-    track_name = models.ForeignKey(Track, on_delete=models.CASCADE)
+    track = models.ForeignKey(Track, on_delete=models.CASCADE)
