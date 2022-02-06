@@ -7,5 +7,4 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Myusers
         fields = '__all__'
-        # ['userId', 'userName', 'userEmail', 'userPassword']
 
