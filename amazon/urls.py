@@ -1,7 +1,8 @@
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from pages.views import*
+
 
 
 urlpatterns = [
@@ -22,6 +23,7 @@ urlpatterns = [
     path('insertUsingModel/',insertUsingModel,name="insertUsingModel"),
     path('myusers_list/',Myusers_list.as_view(),name="myusers_list"),
     path('insert_trainee/',Insert_trainee.as_view(),name="insert_trainee"),
+    path('myapi/',include('myapi.urls')),
 
 
 
